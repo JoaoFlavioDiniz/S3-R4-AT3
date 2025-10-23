@@ -4,7 +4,7 @@ PORT = 8081;
 
 const fs = require ("fs");
 
-app.get("/S3-R4-AT3", (req, res)=>{
+app.get("/S3-R4-AT4", (req, res)=>{
 
     try {
         //lendo o arquivo json
