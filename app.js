@@ -8,20 +8,33 @@ app.get("/S3-R4-AT4", (req, res)=>{
 
     try {
         //lendo o arquivo json
-        const data = fs.readFileSync("./usuarios.json", "utf-8");
+        const data = fs.readFileSync("./eventos.json", "utf-8");
          //transformar o arquivo json em objeto js
-         let usuarios = JSON.parse(data);
-         const{nomeUsuario, emailUsuario} = req.query;
-         if(nomeUsuario){
-            usuarios = usuarios.filter(usuario => usuario.nome.toLowerCase() .includes(nomeUsuario.toLowerCase()));
+         let eventos = JSON.parse(data);
+         const{nomeEvento, dataEvento, dataInicial, dataFinal} = req.query;
+         if(nomeEvento){
+            eventos = eventos.filter(evento => evento.nome.toLowerCase() .includes(nomeEvento.toLowerCase()));
+         }
+         if(dataEvento){
+            if(dataEvento == "" || dataEvento <= (dataFinal)){
+           return res.status(404).send(`Data incorreta`);
+         }
+            eventos = eventos.filter(evento => evento.data >= dataEvento);
          }
          
-         res.status(200).json(usuarios);
+         if(dataFinal){
+            if(dataFinal == "" || isNaN(dataFinal)){
+           return res.status(404).send(`Data incorreta`);
+         }
+            eventos = eventos.filter(evento => evento.data >= dataFinal);
+         }
+
+         res.status(200).json(eventos);
 
         
     } catch (error) {
         console.error("Erro ao ler o arquivo json", error);
-        res.status(500).json({error: " Erro interno no servidor"})
+        res.status(500).json({error: " Erro interno no servidor"});
     }
 })
 
